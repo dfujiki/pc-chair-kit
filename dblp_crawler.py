@@ -11,11 +11,25 @@ import unidecode
 import html
 import argparse
 import pickle
+from multiprocessing import Pool, Lock, cpu_count
 
+#--------------------
+# Hack urlopen
+#--------------------
+import socket
+origGetAddrInfo = socket.getaddrinfo
+
+def getAddrInfoWrapper(host, port, family=0, socktype=0, proto=0, flags=0):
+    return origGetAddrInfo(host, port, socket.AF_INET, socktype, proto, flags)
+
+# replace the original socket.getaddrinfo by our version
+socket.getaddrinfo = getAddrInfoWrapper
 
 def sanitize_text(text):
     text = unidecode.unidecode(html.unescape(text.decode('ascii')))
     return text.replace("&", " ")
+
+lock = Lock()
 
 class Cache(object):
     def __init__(self, path='data/.cache_queries'):
@@ -68,6 +82,9 @@ class Cache(object):
             return None
 
 
+# This is needed to make sure cache instance is attributed to dblp_crawler module, not __main__
+if __name__ == "__main__":
+    from dblp_crawler import Cache
 cache = Cache.load('data/.cache_queries')
 
 def save_cache():
@@ -85,8 +102,10 @@ def request_dblp(query):
             else:
                 resource = urllib.request.urlopen(url)
                 raw_str = resource.read()
+                lock.acquire()
                 cache.add_query(query, raw_str)
                 cache.backup_and_save()
+                lock.release()
 
             raw_str = sanitize_text(raw_str)
             return xmltodict.parse(raw_str)
@@ -179,12 +198,19 @@ def request_publication(key):
 
 def request_publications(author_key):
     pubs = []
-    publication_keys = request_publication_keys(author_key)
+    try :
+        publication_keys = request_publication_keys(author_key)
 
-    for key in tqdm(publication_keys):
-        pub, _ = request_publication(key)
-        if pub:
-            pubs.append(read_pub(pub))
+        with Pool(NP) as pool:
+            pubs = [read_pub(pub.get()[0]) for pub in tqdm([pool.apply_async(request_publication, args=(key,)) for key in publication_keys]) if pub ]
+
+    except Exception as err:
+        print("Something bad happend:", str(err))
+
+    # for key in tqdm(publication_keys):
+    #     pub, _ = request_publication(key)
+    #     if pub:
+    #         pubs.append(read_pub(pub))
 
     return pubs
 
@@ -208,7 +234,7 @@ def filter_publications(publications, year):
 def get_author_keys(author_list):
     authors = read_csv(author_list, ["first_name", "last_name"])
 
-    for author in tqdm(authors.items()):
+    for author in tqdm(authors):
         keys = request_author_key(author["first_name"] + "+" +
                                   author["last_name"])
         author["keys"] = keys
@@ -218,8 +244,8 @@ def get_author_keys(author_list):
 
 def build_author_key_csv(author_key_list, authors):
     csv = []
-    for k, author in authors.items():
-        row = [k, author['first_name'], author['last_name']]
+    for author in authors:
+        row = [author['id'], author['first_name'], author['last_name']]
         for key in author['keys']:
             csv += [row + [key, 'x', make_author_link(key)]]
 
@@ -297,7 +323,7 @@ def get_co_authors(paper_csv):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("mode", choices=["author-keys", "paper-lists",
+    parser.add_argument("mode", choices=["author-keys", "paper-list",
                                          "list-co-authors", "get-conflicts"])
     parser.add_argument("--author-list", help="List with author names")
     parser.add_argument("--author-keys",
@@ -322,8 +348,13 @@ def main():
     parser.add_argument("--hot-crp-papers",
                         help="JSON with hotcrp papers, will be used to"
                         " generate the conflict list")
+    parser.add_argument("-n",
+                        default=2, type=int,
+                        help="# of parallel threads")
 
     args = parser.parse_args()
+
+    global NP; NP = args.n
 
     def check_arg(arg, msg):
         if not arg:
@@ -336,7 +367,7 @@ def main():
         authors = get_author_keys(args.author_list)
         build_author_key_csv(args.author_keys, authors)
 
-    elif args.mode == 'paper-lists':
+    elif args.mode == 'paper-list':
         check_arg(args.author_keys, "No author keys passed")
         check_arg(args.paper_list, "No paper list passed")
 
