@@ -232,7 +232,7 @@ def filter_publications(publications, year):
 
 
 def get_author_keys(author_list):
-    authors = read_csv(author_list, ["first_name", "last_name"])
+    authors = read_csv(author_list, ["first_name", "last_name", "email"])
 
     for author in tqdm(authors):
         keys = request_author_key(author["first_name"] + "+" +
@@ -245,20 +245,20 @@ def get_author_keys(author_list):
 def build_author_key_csv(author_key_list, authors):
     csv = []
     for author in authors:
-        row = [author['id'], author['first_name'], author['last_name']]
+        row = [author['id'], author['first_name'], author['last_name'], author['email']]
         for key in author['keys']:
             csv += [row + [key, 'x', make_author_link(key)]]
 
-    write_csv(author_key_list, ['id', 'first_name', 'last_name', 'key',
+    write_csv(author_key_list, ['id', 'first_name', 'last_name', 'email', 'key',
                                 'valid', 'key_link'], csv)
 
 
 def build_paper_csv(pub_list, authors, whitelist):
-    schema = ['id', 'first_name', 'last_name', 'keys',
+    schema = ['id', 'first_name', 'last_name', 'email', 'keys',
               'valid', 'pub_key', 'pub_title', 'put_year', 'pub_authors']
     csv = []
     for k, author in authors.items():
-        row = [k, author['first_name'], author['last_name'],
+        row = [k, author['first_name'], author['last_name'], author['email'],
                ";".join(author['keys']), 'x']
         for pub in author['pubs']:
             csv += [row + [pub['key'], pub['title'], pub['year'],
@@ -267,7 +267,7 @@ def build_paper_csv(pub_list, authors, whitelist):
 
 
 def get_paper_list(author_keys, year):
-    author_keys = read_csv(author_keys, ['first_name', 'last_name',
+    author_keys = read_csv(author_keys, ['first_name', 'last_name', 'email',
                                          'key', 'valid', 'key_link'])
     authors = {}
     # Adding authors with multiple keys
@@ -275,7 +275,7 @@ def get_paper_list(author_keys, year):
         idx = entry['id']
         if idx not in authors and entry['valid']:
             authors[idx] = {}
-            copy_dic(entry, authors[idx], ['first_name', 'last_name'])
+            copy_dic(entry, authors[idx], ['first_name', 'last_name','email'])
             authors[idx]['keys'] = [entry['key']]
         elif entry['valid']:
             authors[idx]['keys'].append(entry['key'])
@@ -293,7 +293,7 @@ def get_paper_list(author_keys, year):
 
 
 def get_co_authors(paper_csv):
-    papers = read_csv(paper_csv, ['first_name', 'last_name',
+    papers = read_csv(paper_csv, ['first_name', 'last_name', 'email',
                                   'keys', 'valid', 'pub_key', 'pub_title',
                                   'put_year', 'pub_authors'])
     papers_dic = {}
@@ -332,7 +332,7 @@ def main():
                         help="Author paper list")
     parser.add_argument("--co-author-list", help="Co author list")
     parser.add_argument("--co-author-year", type=int,
-                        default=2012,
+                        default=2014,
                         help="Last acceptable year for"
                         "collaboration without conflict")
 

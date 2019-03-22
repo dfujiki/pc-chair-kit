@@ -56,7 +56,7 @@ def main():
                        for k, p in hotcrp_pc_members.items()}
 
     for row in tqdm(iterate_csv(pc_member_paper_db_csv)):
-        (email, id, firstname, lastname, keys, valid,
+        (id, firstname, lastname, email, keys, valid,
          pub_key, pub_title, pub_year, pub_authors) = row
 
         if valid == "x":
