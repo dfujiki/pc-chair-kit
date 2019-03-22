@@ -32,13 +32,13 @@ def get_citation_count(submission_csv, citation_dict):
 def read_expertise_db(expertise_csv, exp_list):
     db = {}
     for r in iterate_csv(expertise_csv):
-        db[r[2]] = {}
-        if len(exp_list) != len(r[3:]):
+        db[r[3]] = {}
+        if len(exp_list) != len(r[4:]):
             print(exp_list)
-            print(r[3:])
+            print(r[4:])
             raise ValueError("Exp list and expertise db topics do not match "
-                             "%d vs. %d" % (len(exp_list), len(r[3:])))
-        db[r[2]]['expertises'] = [l for l, v in zip(exp_list, r[3:])
+                             "%d vs. %d" % (len(exp_list), len(r[4:])))
+        db[r[3]]['expertises'] = [l for l, v in zip(exp_list, r[4:])
                                   if v.strip()]
     return db
 
