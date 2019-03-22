@@ -21,8 +21,8 @@ We check COIs flagged by authors, PC members and we also automatically generate 
 The workflow for checking/flagging COIs between papers and PC members is the following:
 1. Generate a `.csv` with a list of the PC members, with their first and last names. This list has to be manually generated, and it has the following format:
 ```
-id, first_name, last_name
-1, PCFirstName1, PCLastName1
+id, first_name, last_name, email
+1, PCFirstName1, PCLastName1, PCEmail
 ```
 
 2. Use the first list as an input to DBLP crawler. To do so, run:
@@ -35,7 +35,7 @@ This command will generate another CSV file in `AUTHOR_KEYS_FILE` which has all 
 ```bash
 python3 dblp_crawler.py paper-list --author-keys AUTHOR_KEYS_FILE --paper-list PAPER_LIST_FILE
 ```
-This command will generate another CSV file in `PAPER_LIST_FILE` with all the papers authored by each PC member. Your job now is to go through that file and filter out all the bad entries (i.e., papers that do not constitute COI with co-authors), the same way you filtered out the author keys. After filtering this file, add another column to the file (1st column) with the PC emails. Excel helps to perform this task.
+This command will generate another CSV file in `PAPER_LIST_FILE` with all the papers authored by each PC member. Your job now is to go through that file and filter out all the bad entries (i.e., papers that do not constitute COI with co-authors), the same way you filtered out the author keys. ~~After filtering this file, add another column to the file (1st column) with the PC emails. Excel helps to perform this task.~~
 
 4. Generate the co-author list from the paper list. To do so, run:
 ```bash
@@ -46,6 +46,7 @@ This command will warm up the paper cache so that every time you read from this 
 5. Download and clean paper information from HotCRP. Go to HotCRP and download all the paper info. Search for all submitted papers, and, on the bottom of the page, click `select all`, and, in the drop-down list, select `JSON`, and click go. You will get a JSON file. In that file, you need to clean up all the information. For every paper, make sure that the COI list (collaborators) is in the following form:
 ```
 Institution1 \n
+All (Institution1) \n
 AuthorFirstName AuthorLastName, Instutution2 \n
 ```
 The scripts will interpret everything that does not have a `,` or a `(` before the end of the line as an institution name, and everything else as an author name. Make sure there is no line with multiple institutions/authors. The scripts will ignore authors institutions. Therefore, it is enough to end author names with a `,` to make sure the script will recognize them. Keep an eye on names that are common and short, as the cause lots of trouble when matching strings. For the author list, make sure that, for authors with multiple affiliations, you list all the affiliations in the `collaborators` field, as the scripts won't be able to recognize multiple affiliations.
