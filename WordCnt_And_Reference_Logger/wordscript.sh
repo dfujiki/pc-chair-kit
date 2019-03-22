@@ -2,7 +2,7 @@
 #bash clearscript.sh
 for file in *.pdf
 do
-    if [ ! -f $file ]; then
+    if [ -f $file ]; then
         pdftotext $file
     fi
 done
