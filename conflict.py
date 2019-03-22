@@ -15,6 +15,7 @@ def parse_line(line):
     
     line = line.strip('"')
     name_regex = "\s*\w+\-?'?\w*\.?\&?\s*"
+    paren_content_regex = "(?<=\().*?(?=\))"
 
     g = re.match("\s*\d*\s*\-?\.?(.*)", line)
     line = g.group(1)
@@ -34,7 +35,14 @@ def parse_line(line):
     if names.strip().lower() == 'none':
         return None, None
 
-    if re.match("\s*[,;:\-\(]", line, re.IGNORECASE):
+    if names.strip().lower() == 'all':
+        # get content in the first parentheses
+        paren_contents = re.findall(paren_content_regex, original_line)
+        if not paren_contents or not paren_contents[0]:
+            raise ValueError("All with no institution in parentheses: %s" % (original_line))
+        return None, paren_contents[0].strip()
+
+    if re.match("\s*[,;:\-\(\[]", line, re.IGNORECASE):
         # This is a name, make sure there is no warning:
         for i in institution_indication:
             if i.lower() in names.lower():
