@@ -135,6 +135,7 @@ while (<>)
         }
         if($reference_act==1)
         {
+            $word =~ s/,//g;
             shift @rolling_word_array;
             push @rolling_word_array, $word;
             #print "Calling matchme with: @rolling_word_array\n";

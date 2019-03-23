@@ -150,7 +150,7 @@ def main():
     sub_prefs_exp = {}
     sub_prefs_cit = {}
     sub_topics = {}
-    for submission in tqdm(submissionList):
+    for submission in tqdm(submissionList["papers"]):
         pid = submission['pid']
         paper_topics = (submission['topics']
                         if 'topics' in submission else [])
@@ -179,7 +179,7 @@ def main():
             sub_prefs_cit[pid][email] = score_citation
 
     emails = sorted([k for k, v in expertise_db.items()])
-    pids = sorted([int(s['pid']) for s in submissionList])
+    pids = sorted([int(s['pid']) for s in submissionList["papers"]])
 
     headers = 'pid,topics,' + ','.join(emails) + ',total' + '\n'
 
