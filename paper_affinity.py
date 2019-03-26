@@ -39,7 +39,7 @@ def read_expertise_db(expertise_csv, exp_list):
             raise ValueError("Exp list and expertise db topics do not match "
                              "%d vs. %d" % (len(exp_list), len(r[4:])))
         db[r[3]]['expertises'] = [l for l, v in zip(exp_list, r[4:])
-                                  if v.strip()]
+                                  if (v.strip()=='1'or v.strip()=='2')]
     return db
 
 
