@@ -107,7 +107,11 @@ class Submission(Publication):
         self.collabs_field_cs = {}
         self.dblp_cs = {}
         self.fake_conflicts = {}
+        
+        self.declared_pc_type = [x[1] for x in pc_conflicts]
+        
         self.declared_pc = [email for email, _ in pc_conflicts]
+        
         self.reviewers = []
 
     def __str__(self):
@@ -199,9 +203,10 @@ class Submission(Publication):
            not (golden_hotcrp or golden_dblp)):
 
             if email in claimed_1:
-                self.fake_conflicts[email] = "pc_conflicts"
+                #print(self.declared_pc_type[claimed_1.index(email)])
+                self.fake_conflicts[email] = self.declared_pc_type[claimed_1.index(email)]
             elif email in claimed_2:
-                self.fake_conflicts[email] = "collaborators"
+                self.fake_conflicts[email] = "collaborators_field"
             else:
                 raise ValueError("What is going on pal?")
 

@@ -11,6 +11,7 @@ import unidecode
 import html
 import argparse
 import pickle
+import string
 from multiprocessing import Pool, Lock, cpu_count
 
 #--------------------
@@ -161,7 +162,8 @@ def sanitize_coauthors(authors):
     
     for author in authors:
         if isinstance(author, str):
-            sanitized_authors.append(author)
+            sanitized_authors.append(author.rstrip(string.digits))
+            #sanitized_authors.append(author)
         else:
             sanitized_authors.append(author['#text'])
     return sanitized_authors

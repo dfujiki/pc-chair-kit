@@ -43,7 +43,7 @@ def main():
 
     print("Reading submissions:")
     d = get_dict_json(submissions_json)
-    submissions = [Submission.from_json(p, institutions) for p in tqdm(d["papers"])]
+    submissions = [Submission.from_json(p, institutions) for p in tqdm(d)]
 
     print("Reading hotcrp pc members:")
     hotcrp_pc_members = [PCMember.from_hotcrp_csv(line, institutions)
