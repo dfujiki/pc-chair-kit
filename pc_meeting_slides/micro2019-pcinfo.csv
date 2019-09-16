@@ -1,0 +1,10 @@
+first,last,email,roles,tags
+First1,Last1,pc-member1@xyz.com,pc,G1-PC PC-Member
+First2,Last2,pc-member2@xyz.com,pc,G2-PC PC-Member
+First3,Last3,pc-member3@xyz.com,pc,G1-PC PC-Member
+First4,Last4,pc-member4@xyz.com,pc,G2-PC PC-Member
+First5,Last5,pc-member5@xyz.com,pc,G1-PC PC-Member
+First6,Last6,pc-chair2@xyz.edu,pc,PC-Member
+First7,Last7,pc-chair1@xyz.edu,pc,PC-Member
+First8,Last8,pc-member8@xyz.com,erc,ERC
+First9,Last9,pc-member9@xyz.com,erc,ERC

@@ -1,0 +1,9 @@
+paper,title,first,last,email,conflicttype
+1,Title 1,Last1,First1,pc-member1@xyz.com,Institutional
+2,Title 2,Last1,First1,pc-member1@xyz.com,Institutional
+2,Title 2,Last2,First2,pc-member2@xyz.com,Institutional
+2,Title 2,Last3,First3,pc-member3@xyz.com,Institutional
+2,Title 2,Last4,First4,pc-member4@xyz.com,Institutional
+2,Title 2,Last5,First5,pc-member5@xyz.com,Institutional
+2,Title 2,Last6,First6,pc-chair2@xyz.edu,Institutional
+2,Title 2,Last7,First7,pc-chair1@xyz.edu,Institutional
