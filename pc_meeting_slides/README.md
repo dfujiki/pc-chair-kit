@@ -15,7 +15,9 @@ For joint session,
 bash meeting_slides.sh micro2019-pcconflicts.csv joint 
 
 If the PC meeting is divided into two groups then: 
+
 bash meeting_slides.sh G1-micro2019-pcconflicts.csv G1 
+
 bash meeting_slides.sh G2-micro2019-pcconflicts.csv G2 
 
 Some attributes are hardocded in the Python script, which need to be modified. 
