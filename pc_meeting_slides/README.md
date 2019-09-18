@@ -22,8 +22,12 @@ bash meeting_slides.sh G2-micro2019-pcconflicts.csv G2
 
 Some attributes are hardocded in the Python script, which need to be modified. 
 e.g.  
+
 i. Tags used to divide the PC members into two groups 
+
 ii. Tags used to divide papers into two groups 
+
 iii. Chair's name and email ID 
+
 iv. Alternate chair names (if the chair is in conflict with a paper) 
 
