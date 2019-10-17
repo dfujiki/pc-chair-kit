@@ -1,0 +1,8 @@
+First,Last,Role,Partition,email, Generosity factor, Expert - Generosity factor,R1 generosity,R2 generosity, Total completed reviews, Average review score given by the reviewer, Standard deviation of the review scores given by this reviewer
+R,1,G2-PC,G2,r1@pc,1.121212,1.125000,1.125000,0.000000,3,2.333333,0.471405
+R,2,G1-PC,G1,r2@pc,0.969697,0.979314,1.010638,0.916667,3,2.333333,0.471405
+R,3,G1-PC,G1,r3@pc,0.977273,0.984486,0.984486,0.000000,4,2.250000,0.433013
+R,4,G1-PC,G1,r4@pc,0.833333,0.840426,0.840426,0.000000,2,2.000000,0.000000
+R,5,ERC,ERC,r5@pc,1.166667,1.180851,0.000000,1.180851,2,3.000000,1.000000
+R,7,G2-PC,G2,r7@pc,0.954545,0.958333,0.000000,0.958333,2,2.000000,0.000000
+R,6,ERC,ERC,r6@pc,0.954545,0.968972,0.916667,1.021277,2,2.500000,0.500000

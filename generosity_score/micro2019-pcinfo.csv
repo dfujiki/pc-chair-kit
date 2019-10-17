@@ -1,0 +1,8 @@
+first,last,email,roles,tags
+R,1,r1@pc,pc,G2-PC
+R,2,r2@pc,pc,G1-PC
+R,3,r3@pc,pc,G1-PC
+R,4,r4@pc,pc,G1-PC
+R,5,r5@pc,pc,ERC
+R,6,r6@pc,pc,ERC
+R,7,r7@pc,pc,G2-PC
