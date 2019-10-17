@@ -149,7 +149,7 @@ e.g.
 * Alternate chair names (if the chair is in conflict with a paper): Alternate chair G1, Alternate chair G2
 
 
-## Reviewers' Generosity analysis
+## Post-expert Generosity analysis
 
 Generosity mean and post-expert generosity mean metrics were originally proposed by Prof. Onur Mutlu -  https://people.inf.ethz.ch/omutlu/pub/onur_program-chair-remarks_micro12_talk.pdf
 
