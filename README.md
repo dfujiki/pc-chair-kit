@@ -1,15 +1,13 @@
 # PC Chair Kit
 This is a kit to make PC chairs lives less painful.
 
-This code was written for ISCA-18 by Mario Drumond and Mark Sutherland under the guidance of Babak Falsafi. We used code from the ISCA 17 and Micro 17. The code is still in a crude state, and we will clean it out in the near future.
-
+This code is foked from the code written for ISCA-18 ( Which used code from the ISCA 17 and Micro 17). This code is further developed by Daichi Fujiki and Deval Shah for MICRO'19 under the guidance of Prof. Tor M. Aamodt and Prof. Reeturparna Das.
+ 
 They can be used for the following tasks:
 * Conflict of interest management.
 * Paper assignments.
-* Various nagging tasks (prepare to nag a lot to your PCs about missed deadlines and ignored guidelines).
-* Managing ranking information (disclosing it to reviewers, ranking papers using PC ranks, etc.)
-* Meeting management (if for some reason you can't use HotCRP's awesome meeting tracker).
-* Conflict of interest management for TOT awards.
+* Meeting management ( Slides generation to display the Conflict information in the meeting room and Hallways).
+* Post expert generosity analysis of scores which considers the generosity factor of each reviewer.
 
 To start, run:
 ```
@@ -116,11 +114,100 @@ Expertise1,Topic1,Topic2,Topic3
 * **OUT_PC_CITATIONS** PC citation reports.
 * **OUT_AFFINITY** PC affinity reports.
 
-## Nagging your PC members
-TBA
+## Managing the PC meeting (Conflict slides generation)
 
-## Managing the PC meeting
-TBA
+This script is used to generate the slides with conflict information for PC meeting. Each slide shows the conflict information of the current paper and the next paper. We used these slides to present the conflict information in the meeting room at the start of discussion of each paper, so that conflicted PC members can evacuate the room. We also presented the slides in the hallway so that any PC Members outside the meeting room can keep track.
 
-## COIs for TOT Award.
-TBA
+If the PC members are divided into two groups G1 and G2 and there are two parallel dicsussions, then the script can be used to generate slides for separate sessions as well, in such case, names of the PC member for given session can be highlighted.
+
+For example, dummy database is added, which is to be replaced with actual data downlaoded from Hotcrp site.
+
+Mainly, three files are needed
+
+* Paper data in csv format: `\*-data.csv`
+* Pc info in csv format: `\*-pcinfo.csv`
+* Paper conflict information in csv format: `\*-pcconflicts.csv` 
+	* This list should be in the discussion order. For that it is recommended that the papers are sorted in the discussion order on HotCrp site and then the conflict info is downloaded.
+
+Example:
+For joint session,
+``` 
+bash meeting_slides.sh micro2019-pcconflicts.csv joint micro2019-pcinfo.csv micro2019-data.csv
+```
+If the PC meeting is divided into two groups then:
+```
+bash meeting_slides.sh G1-micro2019-pcconflicts.csv G1 micro2019-pcinfo.csv micro2019-data.csv
+bash meeting_slides.sh G2-micro2019-pcconflicts.csv G2 micro2019-pcinfo.csv micro2019-data.csv
+```
+Some attributes are hardocded in the Python script, which need to be modified.
+e.g. 
+
+* Tags used to divide the PC members: G1-PC, G2-PC, ERC
+* Tags used to divide papers into two groups: G1 and G2
+* Chairs' email ID: pc-chair1@xyz.edu,pc-chair2@xyz.edu
+* Chairss Names: PC chair 1, PC chair 2
+* Alternate chair names (if the chair is in conflict with a paper): Alternate chair G1, Alternate chair G2
+
+
+## Reviewers' Generosity analysis
+
+Generosity mean and post-expert generosity mean metrics were originally proposed by Prof. Onur Mutlu -  https://people.inf.ethz.ch/omutlu/pub/onur_program-chair-remarks_micro12_talk.pdf
+
+This script calculates the the generosity mean and post expert generosity mean of the paper based on the merit score. It cosiders post rebuttal overall merit if availlable, else pre reposnse overall merit.
+
+The script takes three files as input (these files can e downloaded frn=om HotCrp submission site):
+
+* \*-reviews.csv: reviews in csv format
+* \*-pcinfo.csv: PC information in csv format
+* \*-data.csv: Paper data in csv format
+
+The folder consists of dummy data files. 
+
+To run the script, use following command
+```
+python generosity_score.py
+```
+
+The script generates csv files with relevant data and also some plots for better visualization of the generosity distribution of reviewers and papers, overall merit distribution etc..
+
+* generosity_merits.csv
+``
+Main output with Generosity, post expert generosity merits of papers. It also contains generosty seggregation for PC members and ERC members as well as reviewers' generosity score.
+``
+* contradictory_review.csv
+``
+Some papers might have descrepency between "overall merit" and "where would you rank the paper in pile". This file contains papers' list where the overall merit is <=2 but the paper is still in top 50% according to the reviewers. 	
+``
+* generosity_reviewer.csv
+``
+Contains the overall generosity of reviewers, Round 1 generosity, round 2 generosity, average merit given by the reviewer..
+``
+
+* G1/G2_avg_gen_with_ERC.png 
+``generosity distribution of papers in G1/G2 group. Generosity of ERC members is also considered in the calculation of average generosity.
+``
+* G1/G2_avg_gen_without_ERC.png
+``
+ generosity distribution of papers in G1/G2 group. Generosity of ERC members is not considered in the calculation of average generosity.
+``
+* generosity_of_reviewer.png
+``
+Generosity dostribution of reviewers' generosity
+``
+* Post-Rebuttal_overall_merit.png
+``
+Post rebuttal average merit distribution of all the papers
+``
+* generosity_mean_Post-Rebuttal_overall_merit.png
+``
+generosity mean distribution of all the papers
+``
+* post_expert_generosity_mean_Post-Rebuttal_overall_merit.png
+``
+Post expert generosity mean distribution of all the papers
+``
+
+Notes:
+* The script assumes some spacific tags for papers and PC members, the script needs to be modified for using different tags.
+* Also, the script is designed for 2 groups of PC members, 2 rounds of reviews, 3 reviewers for the first round and 2 additional reviewers for the 2nd round. The script needs to be modified in cases there are some changes.
+

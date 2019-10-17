@@ -1,4 +1,4 @@
-python meeting_slides_generator.py $1 $2 > presentation.tex
+python meeting_slides_generator.py $1 $2 $3 $4> presentation.tex
 latex presentation.tex 
 latex presentation.tex 
 dvips presentation.dvi 

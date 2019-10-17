@@ -190,7 +190,8 @@ def gen_presentation(conflicts, tags):
 
 
 
-pcdata = pd.read_csv("micro2019-pcinfo.csv",header=0)
+pcdata_file= sys.argv[3]
+pcdata = pd.read_csv(pcdata_file,header=0)
 
 #dictionary for PC members' names
 #key = email_id; value = "First_name Last_name"
@@ -220,23 +221,24 @@ for i in range(0,len(pcdata["email"])):
 
 
 
-# Paper information CSV downloaded from hotcrp 
-micro_paper_data=pd.read_csv("micro2019-data.csv",header=0)
+    # Paper information CSV downloaded from hotcrp 
+data_file=sys.argv[4]
+micro_paper_data=pd.read_csv(data_file,header=0)
 # key: paper_id, value: Partition
 p_group={}
 # key: paper_id, value: Tags (space seperated)
 p_tags = {}
 for i in range(0,len(micro_paper_data['Tags'])):
 
-    p_id= micro_paper_data['ID'][i]
-    #print(p_id)
-    tags= micro_paper_data['Tags'][i]
-    p_tags[p_id]=tags
-    
-    if "#G1" in tags:
-        p_group[p_id]=["G1"]
-    if "#G2" in tags:
-        p_group[p_id]=["G2"]
+        p_id= micro_paper_data['ID'][i]
+        #print(p_id)
+        tags= micro_paper_data['Tags'][i]
+        p_tags[p_id]=tags
+        
+        if "#G1" in tags:
+            p_group[p_id]=["G1"]
+        if "#G2" in tags:
+            p_group[p_id]=["G2"]
 
 
 
@@ -266,29 +268,29 @@ if session_tag=="G2":
 
 
 for i in range(0,len(confdata["paper"])):
-    p_id = confdata["paper"][i]
-    r_id = confdata["email"][i]
-    if not( p_id in conflicts_dir):
-        conflicts_dir[p_id]=[]
+        p_id = confdata["paper"][i]
+        r_id = confdata["email"][i]
+        if not( p_id in conflicts_dir):
+            conflicts_dir[p_id]=[]
 
-    # program chairs' conflicts
-    if r_id=="pc-chair1@xyz.edu":
-        p_tags[p_id]+= " #chair1conflict"
-    if r_id=="pc-chair2@xyz.edu":
-        p_tags[p_id]+= " #chair2conflict"
+        # program chairs' conflicts
+        if r_id=="pc-chair1@xyz.edu":
+            p_tags[p_id]+= " #chair1conflict"
+        if r_id=="pc-chair2@xyz.edu":
+            p_tags[p_id]+= " #chair2conflict"
 
 
-    # Do not include ERC members in the conflict list. So PC members with G1/G2/PC chair tags are included in the slides.
-    if pc_tag[r_id]=="G1" or pc_tag[r_id]=="G2" or pc_tag[r_id]=="PC chair":
-        if p_id in conflicts_dir:
-            conflicts_dir[p_id].append(pc_names[r_id])
-        else:
-            conflicts_dir[p_id]=[pc_names[r_id]]
-  
+        # Do not include ERC members in the conflict list. So PC members with G1/G2/PC chair tags are included in the slides.
+        if pc_tag[r_id]=="G1" or pc_tag[r_id]=="G2" or pc_tag[r_id]=="PC chair":
+            if p_id in conflicts_dir:
+                conflicts_dir[p_id].append(pc_names[r_id])
+            else:
+                conflicts_dir[p_id]=[pc_names[r_id]]
+      
 
 for key,value in conflicts_dir.items():
-    conflicts.append(value)
-    tags.append(p_tags[key])
+        conflicts.append(value)
+        tags.append(p_tags[key])
 
 
 output = gen_presentation(conflicts,tags)
